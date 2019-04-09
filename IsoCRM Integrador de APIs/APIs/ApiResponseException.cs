@@ -9,33 +9,40 @@ namespace IsoCRM_Integrador_de_APIs.APIs
     {
         public ApiError apiError { get; set; }
 
-        public ApiResponseException(String code, String errorType, String message, List<String> cause)
+        public ApiResponseException(string apiServiceName, string errorCode, string errorType, string message, List<string> cause)
         {
-            apiError = new ApiError();
-            apiError.code = code;
-            apiError.errorType = errorType;
-            apiError.message = message;
-            apiError.cause = cause;
+            apiError = new ApiError
+            {
+                apiServiceName = apiServiceName,
+                errorCode = errorCode,
+                errorType = errorType,
+                message = message,
+                cause = cause
+            };
         }
 
         public class ApiError
         {
             /**
-             * Código do status de erro
+             * O nome da API que originou este erro
              */
-            public String code { get; set; }
+            public string apiServiceName { get; set; }
             /**
-             * Código do tipo de erro gerado, legível por máquinas
+             * Código do erro - pode ser um código HTTP ou um código definido pela API
              */
-            public String errorType { get; set; }
+            public string errorCode { get; set; }
+            /**
+             * Tipo de erro gerado, legível por máquinas
+             */
+            public string errorType { get; set; }
             /**
              * Mensagem do erro gerado, legível por humanos
              */
-            public String message { get; set; }
+            public string message { get; set; }
             /**
              * Causas do erro, conforme apontadas pelo serviço utilizado
              */
-            public List<String> cause { get; set; }
+            public List<string> cause { get; set; }
         }
     }
 }

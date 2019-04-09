@@ -25,7 +25,7 @@ namespace IsoCRM_Integrador_de_APIs.APIs.Meli
             DELETE
         }
 
-        public static async Task<T> Call<T>(Method method, string endpoint, HttpParams callParams, object callBody)
+        public static async Task<T> Call<T>(Method method, string endpoint, HttpParams callParams, object callBody = null)
         {
             MeliApiService api = getMeliApiService();
             HttpResponseMessage response = null;
@@ -66,7 +66,7 @@ namespace IsoCRM_Integrador_de_APIs.APIs.Meli
             else
             {
                 MeliApiError result = JsonConvert.DeserializeObject<MeliApiError>(json);
-                throw new ApiResponseException(result.status, result.error, result.message, result.cause);
+                throw new ApiResponseException("MercadoLivre", result.status, result.error, result.message, result.cause);
             }
         }
     }

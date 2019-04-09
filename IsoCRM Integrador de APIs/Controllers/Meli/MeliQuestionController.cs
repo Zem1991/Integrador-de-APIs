@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using IsoCRM_Integrador_de_APIs.API_Access_Objects.Meli;
+using IsoCRM_Integrador_de_APIs.Meli.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IsoCRM_Integrador_de_APIs.Controllers.Meli
@@ -11,22 +12,20 @@ namespace IsoCRM_Integrador_de_APIs.Controllers.Meli
     [ApiController]
     public class MeliQuestionController : ControllerBase
     {
-        [HttpGet("{questionId}")]
-        public string Get(string questionId, [FromQuery] string accessToken)
+        [HttpGet("user/me")]
+        public async Task<List<MeliQuestion>> GetMyReceivedQuestions([FromQuery] string accessToken)
         {
-            return "question of id " + questionId;
-        }
-
-        [HttpGet("product/{productId}")]
-        public IEnumerable<string> GetByProduct(string productId, [FromQuery] string accessToken)
-        {
-            return new string[] { "question 1 from product " + productId, "question 2 from product " + productId };
+            MeliQuestionAAO aao = new MeliQuestionAAO();
+            List<MeliQuestion> result = await aao.GetMyReceivedQuestions(accessToken);
+            return result;
         }
 
         [HttpGet("user/{userId}")]
-        public IEnumerable<string> GetByUser(string userId, [FromQuery] string accessToken)
+        public async Task<List<MeliQuestion>> GetUserReceivedQuestions(string userId, [FromQuery] string accessToken)
         {
-            return new string[] { "question 1 from user " + userId, "question 2 from user " + userId };
+            MeliQuestionAAO aao = new MeliQuestionAAO();
+            List<MeliQuestion> result = await aao.GetUserReceivedQuestions(userId, accessToken);
+            return result;
         }
     }
 }

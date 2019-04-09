@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using IsoCRM_Integrador_de_APIs.API_Access_Objects.Meli;
+using IsoCRM_Integrador_de_APIs.Meli.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IsoCRM_Integrador_de_APIs.Controllers.Meli
@@ -12,15 +13,27 @@ namespace IsoCRM_Integrador_de_APIs.Controllers.Meli
     public class MeliProductController : ControllerBase
     {
         [HttpGet("{productId}")]
-        public string Get(string productId, [FromQuery] string accessToken)
+        public async Task<MeliProduct> Get(string productId, [FromQuery] string accessToken)
         {
-            return "product of id " + productId;
+            MeliProductAAO aao = new MeliProductAAO();
+            MeliProduct result = await aao.Get(productId, accessToken);
+            return result;
+        }
+
+        [HttpGet("user/me")]
+        public async Task<List<MeliProduct>> GetMyProducts([FromQuery] string accessToken)
+        {
+            MeliProductAAO aao = new MeliProductAAO();
+            List<MeliProduct> result = await aao.GetMyProducts(accessToken);
+            return result;
         }
 
         [HttpGet("user/{userId}")]
-        public IEnumerable<string> GetByUser(string userId, [FromQuery] string accessToken)
+        public async Task<List<MeliProduct>> GetUserProducts(string userId, [FromQuery] string accessToken)
         {
-            return new string[] { "product 1 from user " + userId, "product 2 from user " + userId };
+            MeliProductAAO aao = new MeliProductAAO();
+            List<MeliProduct> result = await aao.GetUserProducts(userId, accessToken);
+            return result;
         }
     }
 }
