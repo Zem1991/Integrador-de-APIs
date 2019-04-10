@@ -29,12 +29,10 @@ namespace IsoCRM_Integrador_de_APIs.API_Access_Objects.Integrador
                  * Não foi possível testar isso, pois somente um serviço pôde ser utilziado por vez para o desenvolvimento deste projeto.
                  */
                 tasks.Add(
-                    Task.Run(
-                        () =>
-                        {
-                            result.AddRange(MeliQuestions(mercadoLivreToken).Result);
-                        }
-                    )
+                    Task.Run(() =>
+                    {
+                        result.AddRange(MeliQuestions(mercadoLivreToken).Result);
+                    })
                 );
             }
             //if (facebookToken != null) {
@@ -46,8 +44,8 @@ namespace IsoCRM_Integrador_de_APIs.API_Access_Objects.Integrador
 
         public async Task<bool> PostAnswer(Dictionary<string, string> callBody)
         {
-            Origin origin = OriginMethods.FromString(callBody.GetValueOrDefault("origin"));
             string accessToken = callBody.GetValueOrDefault("accessToken");
+            Origin origin = OriginMethods.FromString(callBody.GetValueOrDefault("origin"));
             string id = callBody.GetValueOrDefault("id");
             string message = callBody.GetValueOrDefault("message");
 
@@ -73,9 +71,9 @@ namespace IsoCRM_Integrador_de_APIs.API_Access_Objects.Integrador
             {
                 IntegradorMensagemPendente iee = new IntegradorMensagemPendente()
                 {
-                    origin = Origin.MercadoLivre_Question,
+                    origin = Origin.MercadoLivre_Question.ToString(),
                     datetime = DateTime.Now.ToString(),
-                    message =
+                    message = new IntegradorMensagemPendente.EmailEnviadoMensagem()
                     {
                         id = question.id,
                         message = question.text

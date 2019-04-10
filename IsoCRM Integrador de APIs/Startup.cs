@@ -17,6 +17,8 @@ namespace IsoCRM_Integrador_de_APIs
 {
     public class Startup
     {
+        const string corsPolicy = "CorsPolicy";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,8 +29,21 @@ namespace IsoCRM_Integrador_de_APIs
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(corsPolicy,
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddCors();
+
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new CorsAuthorizationFilterFactory(corsPolicy));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,9 +58,14 @@ namespace IsoCRM_Integrador_de_APIs
                 app.UseHsts();
             }
 
+            app.UseCors(corsPolicy);
+
+            app.KeepCorsOnExceptions();
+
             app.UseHttpsRedirection();
-            app.UseCors(option => option.AllowAnyOrigin());
+
             app.UseGlobalExceptionHandler(loggerFactory);
+
             app.UseMvc();
         }
     }

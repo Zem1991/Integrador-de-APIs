@@ -13,7 +13,7 @@ namespace IsoCRM_Integrador_de_APIs.Models.Integrador
         /**
          * A origem deste item - de onde veio a mensagem recebida?
          */
-        public Origin origin { get; set; }
+        public string origin { get; set; }
         /**
          * Data/hora da mensagem recebida
          */
