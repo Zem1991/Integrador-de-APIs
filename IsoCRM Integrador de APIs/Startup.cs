@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using IsoCRM_Integrador_de_APIs.Utils;
@@ -55,6 +56,16 @@ namespace IsoCRM_Integrador_de_APIs
             }
             else
             {
+                app.Use(async (context, next) =>
+                {
+                    await next();
+                    if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value))
+                    {
+                        context.Request.Path = "/index.html";
+                        await next();
+                    }
+                });
+
                 app.UseHsts();
             }
 
