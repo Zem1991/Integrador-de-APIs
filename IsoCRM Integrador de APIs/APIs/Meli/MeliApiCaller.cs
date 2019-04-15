@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using HttpParamsUtility;
+﻿using HttpParamsUtility;
 using MercadoLibre.SDK;
 using MercadoLibre.SDK.Meta;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace IsoCRM_Integrador_de_APIs.APIs.Meli
 {
     public static class MeliApiCaller
     {
-        private const long appId = 550009235470605;
-        private const string appSecret = "RKhSbBQGn8jyoGxaBUrcvVSpPfFhmsJo";
+        private const long appId = 500830441610727;
+        private const string appSecret = "WyIF4565sM9ZMXr4M8ICrSAG6XdCXApF";
 
         public enum Method
         {
@@ -27,32 +22,28 @@ namespace IsoCRM_Integrador_de_APIs.APIs.Meli
 
         public static async Task<T> Call<T>(Method method, string endpoint, HttpParams callParams, object callBody = null)
         {
-            MeliApiService api = getMeliApiService();
+            MeliApiService caller = new MeliApiService
+            {
+                Credentials = new MeliCredentials(MeliSite.Brasil, appId, appSecret)
+            };
+
             HttpResponseMessage response = null;
             switch (method)
             {
                 case Method.GET:
-                    response = await api.GetAsync(endpoint, callParams);
+                    response = await caller.GetAsync(endpoint, callParams);
                     break;
                 case Method.POST:
-                    response = await api.PostAsync(endpoint, callParams, callBody);
+                    response = await caller.PostAsync(endpoint, callParams, callBody);
                     break;
                 case Method.PUT:
-                    response = await api.PutAsync(endpoint, callParams, callBody);
+                    response = await caller.PutAsync(endpoint, callParams, callBody);
                     break;
                 case Method.DELETE:
-                    response = await api.DeleteAsync(endpoint, callParams);
+                    response = await caller.DeleteAsync(endpoint, callParams);
                     break;
             }
             return await ParseResponse<T>(response);
-        }
-
-        private static MeliApiService getMeliApiService()
-        {
-            return new MeliApiService
-            {
-                Credentials = new MeliCredentials(MeliSite.Brasil, appId, appSecret)
-            };
         }
 
         private static async Task<T> ParseResponse<T>(HttpResponseMessage response)
