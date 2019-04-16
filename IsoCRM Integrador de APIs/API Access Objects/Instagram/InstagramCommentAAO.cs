@@ -1,4 +1,5 @@
 ﻿using IsoCRM_Integrador_de_APIs.APIs;
+using IsoCRM_Integrador_de_APIs.APIs.Facebook;
 using IsoCRM_Integrador_de_APIs.Models;
 using IsoCRM_Integrador_de_APIs.Models.Instagram;
 using Newtonsoft.Json;
@@ -31,18 +32,12 @@ namespace IsoCRM_Integrador_de_APIs.API_Access_Objects.Instagram
 
         public async Task<List<InstagramComment>> GetMediaComments(string mediaId, string accessToken)
         {
-            ApiCaller.Method method = ApiCaller.Method.GET;
-            string apiUri = "";
-            string endpoint = "/" + mediaId + "/comment";
+            Method method = Method.GET;
+            string endpoint = mediaId + "/comments?fields=text,timestamp,user";
+            endpoint += "&access_token=" + accessToken;
 
-            object requestParams = new
-            {
-                accessToken
-            };
-            string jsonContent = JsonConvert.SerializeObject(requestParams);
-            StringContent content = new StringContent(jsonContent);
-
-            DataWrapper<InstagramComment> wrapper = await ApiCaller.Call<DataWrapper<InstagramComment>>(method, apiUri, endpoint, content);
+            FacebookApiCaller caller = new FacebookApiCaller();
+            DataWrapper<InstagramComment> wrapper = await caller.Call<DataWrapper<InstagramComment>>(method, endpoint);
             return wrapper.data;
         }
 
@@ -57,9 +52,14 @@ namespace IsoCRM_Integrador_de_APIs.API_Access_Objects.Instagram
             List<InstagramMedia> mediaList = await mediaAAO.GetUserMedia(userId, accessToken);
 
             List<InstagramComment> result = new List<InstagramComment>();
-            foreach (InstagramMedia item in mediaList)
+            foreach (InstagramMedia media in mediaList)
             {
-                List<InstagramComment> comments = await GetMediaComments(accessToken, item.id);
+                List<InstagramComment> comments = await GetMediaComments(media.id, accessToken);
+                foreach (InstagramComment comment in comments)
+                {
+                    comment.user.name = comment.user.id;    //TODO: Obter dados dos usuários do Instagram!
+                    comment.media = media;
+                }
                 result.AddRange(comments);
             }
             return result;

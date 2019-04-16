@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IsoCRM_Integrador_de_APIs.APIs;
 using IsoCRM_Integrador_de_APIs.APIs.Meli;
 using IsoCRM_Integrador_de_APIs.Meli.Models;
 using Microsoft.AspNetCore.Http;
@@ -13,12 +14,12 @@ namespace IsoCRM_Integrador_de_APIs.API_Access_Objects.Meli
     {
         public async Task<MeliProduct> Get(string productId, string accessToken)
         {
-            MeliApiCaller.Method method = MeliApiCaller.Method.GET;
-            string endpoint = "/items/" + productId;
-            HttpParamsUtility.HttpParams callParams = new HttpParamsUtility.HttpParams()
-                .Add("access_token", accessToken);
+            Method method = Method.GET;
+            string endpoint = "items/" + productId;
+            endpoint += "?access_token=" + accessToken;
 
-            MeliProduct result = await MeliApiCaller.Call<MeliProduct>(method, endpoint, callParams);
+            MeliApiCaller caller = new MeliApiCaller();
+            MeliProduct result = await caller.Call<MeliProduct>(method, endpoint);
             return result;
         }
 
@@ -31,15 +32,15 @@ namespace IsoCRM_Integrador_de_APIs.API_Access_Objects.Meli
 
         public async Task<List<MeliProduct>> GetUserProducts(string userId, string accessToken)
         {
-            MeliApiCaller.Method method = MeliApiCaller.Method.GET;
-            string endpoint = "/users/" + userId + "/items/search";
-            HttpParamsUtility.HttpParams callParams = new HttpParamsUtility.HttpParams()
-                .Add("access_token", accessToken);
+            Method method = Method.GET;
+            string endpoint = "users/" + userId + "/items/search";
+            endpoint += "?access_token=" + accessToken;
 
-            MeliUserProducts intermediateResult = await MeliApiCaller.Call<MeliUserProducts>(method, endpoint, callParams);
+            MeliApiCaller caller = new MeliApiCaller();
+            MeliUserProducts intermediateResult = await caller.Call<MeliUserProducts>(method, endpoint);
 
             List<MeliProduct> result = new List<MeliProduct>();
-            foreach (string productId in intermediateResult.results)
+            foreach (string productId in intermediateResult.Results)
             {
                 MeliProduct product = Get(productId, accessToken).Result;
                 result.Add(product);
@@ -47,9 +48,9 @@ namespace IsoCRM_Integrador_de_APIs.API_Access_Objects.Meli
             return result;
         }
     }
-    public class MeliUserProducts
+    internal class MeliUserProducts
     {
-        public string seller_id { get; set; }
-        public string[] results { get; set; }
+        public string Seller_id { get; set; }
+        public string[] Results { get; set; }
     }
 }

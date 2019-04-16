@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using IsoCRM_Integrador_de_APIs.APIs;
+using IsoCRM_Integrador_de_APIs.APIs.Facebook;
 using IsoCRM_Integrador_de_APIs.Models.Facebook;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,19 +19,13 @@ namespace IsoCRM_Integrador_de_APIs.API_Access_Objects.Facebook
 
         public async Task<FacebookUser> Get(string userId, string accessToken)
         {
-            ApiCaller.Method method = ApiCaller.Method.GET;
-            string apiUri = "";
-            string endpoint = "/" + userId + "?fields=id,name,picture";
+            Method method = Method.GET;
+            string endpoint = userId + "?fields=id,name,picture";
+            endpoint += "&access_token=" + accessToken;
 
-            object requestParams = new
-            {
-                accessToken
-            };
-            string jsonContent = JsonConvert.SerializeObject(requestParams);
-            StringContent content = new StringContent(jsonContent);
-
-            FacebookUser result = await ApiCaller.Call<FacebookUser>(method, apiUri, endpoint, content);
-    	    return result;
+            FacebookApiCaller caller = new FacebookApiCaller();
+            FacebookUser result = await caller.Call<FacebookUser>(method, endpoint);
+            return result;
         }
     }
 }

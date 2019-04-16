@@ -13,7 +13,7 @@ namespace IsoCRM_Integrador_de_APIs.Controllers.Instagram
     [ApiController]
     public class InstagramCommentController : ControllerBase
     {
-        [HttpGet("{mediaId}")]
+        [HttpGet("media/{mediaId}")]
         public async Task<List<InstagramComment>> GetMediaComments(string mediaId, [FromQuery] string accessToken)
         {
             InstagramCommentAAO aao = new InstagramCommentAAO();
@@ -21,7 +21,7 @@ namespace IsoCRM_Integrador_de_APIs.Controllers.Instagram
             return result;
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("user/{userId}")]
         public async Task<List<InstagramComment>> GetUserReceivedComments(string userId, [FromQuery] string accessToken)
         {
             InstagramCommentAAO aao = new InstagramCommentAAO();

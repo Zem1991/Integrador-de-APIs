@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IsoCRM_Integrador_de_APIs.API_Access_Objects.Meli;
+using IsoCRM_Integrador_de_APIs.APIs;
 using IsoCRM_Integrador_de_APIs.APIs.Meli;
 using IsoCRM_Integrador_de_APIs.Meli.Models;
 using Microsoft.AspNetCore.Http;
@@ -34,17 +35,17 @@ namespace IsoCRM_Integrador_de_APIs.API_Access_Objects.Meli
 
         private async Task<List<MeliQuestion>> GetProductQuestions(MeliProduct product, string accessToken)
         {
-            MeliApiCaller.Method method = MeliApiCaller.Method.GET;
+            Method method = Method.GET;
             string endpoint = "/questions/search";
-            HttpParamsUtility.HttpParams callParams = new HttpParamsUtility.HttpParams()
-                .Add("item", product.id)
-                .Add("access_token", accessToken);
+            endpoint += "?item=" + product.id;
+            endpoint += "&access_token=" + accessToken;
 
-            MeliProductQuestions productQuestions = await MeliApiCaller.Call<MeliProductQuestions>(method, endpoint, callParams);
+            MeliApiCaller caller = new MeliApiCaller();
+            MeliProductQuestions productQuestions = await caller.Call<MeliProductQuestions>(method, endpoint);
             MeliUserAAO userAAO = new MeliUserAAO();
 
             List<MeliQuestion> result = new List<MeliQuestion>();
-            foreach (MeliQuestion question in productQuestions.questions)
+            foreach (MeliQuestion question in productQuestions.Questions)
             {
                 question.user = await userAAO.Get(question.from.id, accessToken);
                 question.product = product;
@@ -54,8 +55,8 @@ namespace IsoCRM_Integrador_de_APIs.API_Access_Objects.Meli
         }
     }
 
-    public class MeliProductQuestions
+    internal class MeliProductQuestions
     {
-        public MeliQuestion[] questions { get; set; }
+        public MeliQuestion[] Questions { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using IsoCRM_Integrador_de_APIs.APIs;
+using IsoCRM_Integrador_de_APIs.APIs.Facebook;
 using IsoCRM_Integrador_de_APIs.Models;
 using IsoCRM_Integrador_de_APIs.Models.Instagram;
 using Newtonsoft.Json;
@@ -14,18 +15,12 @@ namespace IsoCRM_Integrador_de_APIs.API_Access_Objects.Instagram
     {
         public async Task<InstagramMedia> GetMedia(string mediaId, string accessToken)
         {
-            ApiCaller.Method method = ApiCaller.Method.GET;
-            string apiUri = "";
-            string endpoint = "/" + mediaId;
+            Method method = Method.GET;
+            string endpoint = mediaId + "?fields=caption,timestamp,media_type,media_url,permalink";
+            endpoint += "&access_token=" + accessToken;
 
-            object requestParams = new
-            {
-                accessToken
-            };
-            string jsonContent = JsonConvert.SerializeObject(requestParams);
-            StringContent content = new StringContent(jsonContent);
-
-            InstagramMedia result = await ApiCaller.Call<InstagramMedia>(method, apiUri, endpoint, content);
+            FacebookApiCaller caller = new FacebookApiCaller();
+            InstagramMedia result = await caller.Call<InstagramMedia>(method, endpoint);
             return result;
         }
 
@@ -36,18 +31,12 @@ namespace IsoCRM_Integrador_de_APIs.API_Access_Objects.Instagram
 
         public async Task<List<InstagramMedia>> GetUserMedia(string userId, string accessToken)
         {
-            ApiCaller.Method method = ApiCaller.Method.GET;
-            string apiUri = "";
-            string endpoint = "/" + userId + "/media";
+            Method method = Method.GET;
+            string endpoint = userId + "/media?fields=caption,timestamp,media_type,media_url,permalink";
+            endpoint += "&access_token=" + accessToken;
 
-            object requestParams = new
-            {
-                accessToken
-            };
-            string jsonContent = JsonConvert.SerializeObject(requestParams);
-            StringContent content = new StringContent(jsonContent);
-
-            DataWrapper<InstagramMedia> wrapper = await ApiCaller.Call<DataWrapper<InstagramMedia>>(method, apiUri, endpoint, content);
+            FacebookApiCaller caller = new FacebookApiCaller();
+            DataWrapper<InstagramMedia> wrapper = await caller.Call<DataWrapper<InstagramMedia>>(method, endpoint);
             return wrapper.data;
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IsoCRM_Integrador_de_APIs.API_Access_Objects.Meli;
+using IsoCRM_Integrador_de_APIs.APIs;
 using IsoCRM_Integrador_de_APIs.APIs.Meli;
 using IsoCRM_Integrador_de_APIs.Meli.Models;
 using Microsoft.AspNetCore.Http;
@@ -33,12 +34,12 @@ namespace IsoCRM_Integrador_de_APIs.API_Access_Objects.Meli
 
         private async Task<MeliQuestion> AnswerQuestion(object callBody, string accessToken)
         {
-            MeliApiCaller.Method method = MeliApiCaller.Method.POST;
+            Method method = Method.POST;
             string endpoint = "/answers";
-            HttpParamsUtility.HttpParams callParams = new HttpParamsUtility.HttpParams()
-                .Add("access_token", accessToken);
+            endpoint += "?access_token=" + accessToken;
 
-            MeliQuestion result = await MeliApiCaller.Call<MeliQuestion>(method, endpoint, callParams, callBody);
+            MeliApiCaller caller = new MeliApiCaller();
+            MeliQuestion result = await caller.Call<MeliQuestion>(method, endpoint, callBody.ToString());
             return result;
         }
     }

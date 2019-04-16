@@ -13,7 +13,7 @@ namespace IsoCRM_Integrador_de_APIs.Controllers.Instagram
     [ApiController]
     public class InstagramMediaController : ControllerBase
     {
-        [HttpGet("{userId}")]
+        [HttpGet("user/{userId}")]
         public async Task<List<InstagramMedia>> GetUserMedia(string userId, [FromQuery] string accessToken)
         {
             InstagramMediaAAO aao = new InstagramMediaAAO();
