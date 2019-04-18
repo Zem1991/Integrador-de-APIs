@@ -21,7 +21,6 @@ namespace IsoCRM_Integrador_de_APIs.Utils
                 builder.Run(async context =>
                 {
                     IExceptionHandlerFeature exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
-
                     if (exceptionHandlerFeature != null)
                     {
                         Exception ex = exceptionHandlerFeature.Error;
@@ -31,34 +30,36 @@ namespace IsoCRM_Integrador_de_APIs.Utils
 
                         if (ex is ApiResponseException)
                         {
-                            handleApiResponseException(context, ex as ApiResponseException);
+                            HandleApiResponseException(context, ex as ApiResponseException);
                         }
                         else
                         {
-                            handleExceptionInternal(context, ex);
+                            HandleExceptionInternal(context, ex);
                         }
                     }
+                    // Adicionado apenas para suprimir o aviso CS1998 que é gerado na linha "builder.Run(async context =>"
+                    await Task.FromResult(0);
                 });
             });
         }
 
-        private static void handleApiResponseException(HttpContext context, ApiResponseException ex)
+        private static void HandleApiResponseException(HttpContext context, ApiResponseException ex)
         {
             HttpStatusCode status = HttpStatusCode.BadRequest;
             string message = "Ocorreu um erro por parte da API alvo.";
             object details = ex.apiError;
-            sendResponse(context, status, message, details);
+            SendResponse(context, status, message, details);
         }
 
-        private static void handleExceptionInternal(HttpContext context, Exception ex)
+        private static void HandleExceptionInternal(HttpContext context, Exception ex)
         {
             HttpStatusCode status = HttpStatusCode.InternalServerError;
             string message = ex.Message;
             object details = ex.StackTrace;
-            sendResponse(context, status, message, details);
+            SendResponse(context, status, message, details);
         }
 
-        private async static void sendResponse(HttpContext context, HttpStatusCode status, string message, object details)
+        private async static void SendResponse(HttpContext context, HttpStatusCode status, string message, object details)
         {
             context.Response.StatusCode = (int)status;
             context.Response.ContentType = "application/json";
