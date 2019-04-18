@@ -11,8 +11,8 @@ namespace IsoCRM_Integrador_de_APIs.API_Access_Objects.Correios
     {
         public async Task<clienteERP> Get(Dictionary<string, string> callBody)
         {
-            string idContrato = callBody.GetValueOrDefault("idContrato");               //Número do contrato (10 dígitos)
-            string idCartaoPostagem = callBody.GetValueOrDefault("idCartaoPostagem");   //Cartão de postagem vinculado ao contrato (10 dígitos)
+            string idContrato = callBody.GetValueOrDefault("idContrato");               //Número do contrato
+            string idCartaoPostagem = callBody.GetValueOrDefault("idCartaoPostagem");   //Cartão de postagem vinculado ao contrato
             string usuario = callBody.GetValueOrDefault("usuario");                     //Fornecido pelo Representante Comercial dos Correios mediante carta de solicitação
             string senha = callBody.GetValueOrDefault("senha");                         //Fornecido pelo Representante Comercial dos Correios mediante carta de solicitação
 
