@@ -42,13 +42,13 @@ namespace IsoCRM_Integrador_de_APIs.APIs
             string json = await response.Content.ReadAsStringAsync();
             if (!response.IsSuccessStatusCode)
             {
-                ThrowApiException(json);
+                ThrowApiResponseException(json);
             }
             T result = JsonConvert.DeserializeObject<T>(json);
             return result;
         }
 
-        public virtual void ThrowApiException(string responseAsJson)
+        public virtual void ThrowApiResponseException(string responseAsJson)
         {
             List<string> cause = new List<string>
             {

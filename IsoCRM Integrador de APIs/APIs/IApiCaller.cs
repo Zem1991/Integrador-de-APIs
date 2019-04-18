@@ -19,6 +19,6 @@ namespace IsoCRM_Integrador_de_APIs.APIs
 
         Task<T> ParseResponse<T>(HttpResponseMessage response);
 
-        void ThrowApiException(string responseAsJson);
+        void ThrowApiResponseException(string responseAsJson);
     }
 }

@@ -15,7 +15,7 @@ namespace IsoCRM_Integrador_de_APIs.APIs.Facebook
             return "https://graph.facebook.com/" + endpoint;
         }
 
-        public override void ThrowApiException(string responseAsJson)
+        public override void ThrowApiResponseException(string responseAsJson)
         {
             JObject jobj = JObject.Parse(responseAsJson);
             string error = jobj["error"].ToString();

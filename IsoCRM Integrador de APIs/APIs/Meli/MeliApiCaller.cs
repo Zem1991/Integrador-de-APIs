@@ -50,13 +50,13 @@ namespace IsoCRM_Integrador_de_APIs.APIs.Meli
             string json = await response.Content.ReadAsStringAsync();
             if (!response.IsSuccessStatusCode)
             {
-                ThrowApiException(json);
+                ThrowApiResponseException(json);
             }
             T result = JsonConvert.DeserializeObject<T>(json);
             return result;
         }
 
-        public void ThrowApiException(string responseAsJson)
+        public void ThrowApiResponseException(string responseAsJson)
         {
             MeliApiError result = JsonConvert.DeserializeObject<MeliApiError>(responseAsJson);
             throw new ApiResponseException("MercadoLivre", result.status, result.error, result.message, result.cause);
