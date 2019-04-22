@@ -7,11 +7,11 @@ namespace IsoCRM_Integrador_de_APIs.APIs
 {
     public class ApiResponseException : Exception
     {
-        public ApiError apiError { get; set; }
+        public ApiErrorPayload apiErrorPayload { get; set; }
 
         public ApiResponseException(string apiServiceName, string errorCode, string errorType, string message, List<string> cause)
         {
-            apiError = new ApiError
+            apiErrorPayload = new ApiErrorPayload
             {
                 apiServiceName = apiServiceName,
                 errorCode = errorCode,
@@ -21,7 +21,7 @@ namespace IsoCRM_Integrador_de_APIs.APIs
             };
         }
 
-        public class ApiError
+        public class ApiErrorPayload
         {
             /**
              * O nome da API que originou este erro

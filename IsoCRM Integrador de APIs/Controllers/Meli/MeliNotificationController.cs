@@ -14,10 +14,10 @@ namespace IsoCRM_Integrador_de_APIs.Controllers.Meli
     public class MeliNotificationController : ControllerBase
     {
         [HttpPost]
-        public async Task<MeliNotification> Notify([FromBody] Dictionary<string, string> callBody)
+        public async Task<bool> Notify([FromBody] Dictionary<string, string> callBody)
         {
             MeliNotificationAAO aao = new MeliNotificationAAO();
-            MeliNotification result = await aao.Notify(callBody);
+            bool result = await aao.Notify(callBody);
             return result;
         }
     }

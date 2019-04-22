@@ -47,7 +47,7 @@ namespace IsoCRM_Integrador_de_APIs.Utils
         {
             HttpStatusCode status = HttpStatusCode.BadRequest;
             string message = "Ocorreu um erro por parte da API alvo.";
-            object details = ex.apiError;
+            object details = ex.apiErrorPayload;
             SendResponse(context, status, message, details);
         }
 
